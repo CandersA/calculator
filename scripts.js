@@ -48,7 +48,6 @@ operators.forEach(operator => {
         result.textContent = 0;
         arrayOfNum = [];
         realNumbers[i] = combinedNum;
-        console.log(realNumbers);
         operation = operator.textContent;
         i++;
         dotClicked = false;
@@ -69,11 +68,32 @@ function doOperation(operation) {
         } else {
             finalNum = add(finalNum, realNumbers[z+1]);
         }
-        result.textContent = finalNum;
-        z++;
-        arrayOfNum = [];
-        return finalNum;
+    }
+    else if (operation == '-') {
+        if (z < 1) {
+            finalNum = subtract(realNumbers[z], realNumbers[z+1]);
+        } else {
+            finalNum = subtract(finalNum, realNumbers[z+1]);
+        }
+    }
+    else if (operation == 'x') {
+        if (z < 1) {
+            finalNum = multiply(realNumbers[z], realNumbers[z+1]);
+        } else {
+            finalNum = multiply(finalNum, realNumbers[z+1]);
+        }
+    }
+    else if (operation == '/') {
+        if (z < 1) {
+            finalNum = divide(realNumbers[z], realNumbers[z+1]);
+        } else {
+            finalNum = divide(finalNum, realNumbers[z+1]);
+        }
     };
+    result.textContent = finalNum;
+    z++;
+    arrayOfNum = [];
+    return finalNum;
 };
 
 //areaListener.abort()
@@ -101,13 +121,13 @@ function add(num1,num2) {
 };
 
 function subtract(num1,num2) {
-    return num1-num2;
+    return parseFloat(num1) - parseFloat(num2);
 };
 
 function multiply(num1, num2) {
-    return num1 * num2;
+    return parseFloat(num1) * parseFloat(num2);
 };
 
 function divide(num1,num2) {
-    return num2 != 0 ? num1 / num2 : "You can't divide by zero!";
+    return num2 != 0 ? parseFloat(num1) / parseFloat(num2) : "You can't divide by zero!";
 };
