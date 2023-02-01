@@ -1,5 +1,3 @@
-console.log('js');
-
 const numberbtns = Array.from(document.getElementsByClassName('num'));
 const dot = document.getElementById('dot');
 const operators = Array.from(document.getElementsByClassName('operator'));
@@ -13,23 +11,37 @@ let realNumbers = [];
 let operation;
 let i = 0;
 let dotClicked = false;
+let switchClicked = false;
 
 dot.addEventListener('click', () => {
     if (dotClicked == true) {
         return;
     }
     arrayOfNum.push(dot.textContent);
-    console.log(arrayOfNum);
     combinedNum = arrayOfNum.join('');
     result.textContent = combinedNum;
+    dot.style.filter = 'brightness(70%)';
     dotClicked = true;
+    return combinedNum;
+});
+
+switchPlusMinus.addEventListener('click', () => {
+    if (switchClicked == true) {
+        return;
+    }
+    combinedNum = finalNum;
+    combinedNum *= -1;
+    result.textContent = combinedNum;
+    switchPlusMinus.style.filter = 'brightness(70%)';
+    switchClicked = true;
     return combinedNum;
 });
 
 equals.addEventListener('click', () => {
     realNumbers[i] = combinedNum;
     i++;
-    dotClicked = false;
+    resetDot();
+    resetSwitch();
     if (i > 1) {
         doOperation(operation);
     }
@@ -50,7 +62,8 @@ operators.forEach(operator => {
         realNumbers[i] = combinedNum;
         operation = operator.textContent;
         i++;
-        dotClicked = false;
+        resetDot();
+        resetSwitch();
         if (i > 1) {
             doOperation(operation);
         }
@@ -60,6 +73,16 @@ operators.forEach(operator => {
 
 let finalNum = 0;
 let z = 0;
+
+function resetDot() {
+    dot.style.filter = 'brightness(100%)';
+    dotClicked = false;
+}
+
+function resetSwitch() {
+    switchPlusMinus.style.filter = 'brightness(100%)';
+    switchClicked = false;
+}
 
 function doOperation(operation) {
     if (operation == '+') {
@@ -96,7 +119,6 @@ function doOperation(operation) {
     return finalNum;
 };
 
-//areaListener.abort()
 let combinedNum;
 
 function getNumber(numbtn) {
@@ -113,7 +135,8 @@ function clear() {
     i = 0;
     z = 0;
     finalNum = 0;
-    dotClicked = false;
+    resetDot();
+    resetSwitch();
 };
 
 function add(num1,num2) {
