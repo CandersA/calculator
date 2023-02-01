@@ -8,24 +8,28 @@ const equals = document.getElementById('equals');
 const switchPlusMinus = document.getElementById('plusminus');
 const result = document.getElementById('result');
 
-const areaListener = new AbortController();
-
 let arrayOfNum = [];
 let realNumbers = [];
 let operation;
 let i = 0;
+let dotClicked = false;
 
 dot.addEventListener('click', () => {
+    if (dotClicked == true) {
+        return;
+    }
     arrayOfNum.push(dot.textContent);
     console.log(arrayOfNum);
     combinedNum = arrayOfNum.join('');
     result.textContent = combinedNum;
+    dotClicked = true;
     return combinedNum;
 });
 
 equals.addEventListener('click', () => {
     realNumbers[i] = combinedNum;
     i++;
+    dotClicked = false;
     if (i > 1) {
         doOperation(operation);
     }
@@ -36,7 +40,7 @@ reset.addEventListener('click', clear);
 numberbtns.forEach(numbtn => {
     numbtn.addEventListener('click', () => {
         getNumber(numbtn);
-    }, { signal: areaListener.signal });
+    });
 });
 
 operators.forEach(operator => {
@@ -47,6 +51,7 @@ operators.forEach(operator => {
         console.log(realNumbers);
         operation = operator.textContent;
         i++;
+        dotClicked = false;
         if (i > 1) {
             doOperation(operation);
         }
@@ -88,10 +93,11 @@ function clear() {
     i = 0;
     z = 0;
     finalNum = 0;
+    dotClicked = false;
 };
 
 function add(num1,num2) {
-    return parseInt(num1) + parseInt(num2);
+    return parseFloat(num1) + parseFloat(num2);
 };
 
 function subtract(num1,num2) {
