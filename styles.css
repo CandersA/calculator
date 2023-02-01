@@ -45,6 +45,12 @@ body {
     align-items: center;
 }
 
+.row span:hover,
+.row span:active {
+    cursor:pointer;
+    filter: brightness(70%);
+}
+
 .row {
     display: flex;
     width: 100%;
