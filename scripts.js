@@ -6,46 +6,18 @@ const equals = document.getElementById('equals');
 const switchPlusMinus = document.getElementById('plusminus');
 const result = document.getElementById('result');
 
-let arrayOfNum = [];
 let realNumbers = [];
-let operation;
-let i = 0;
 let dotClicked = false;
 let switchClicked = false;
+let finalNum = '';
+let z = 1;
+let operatorIcon;
 
-dot.addEventListener('click', () => {
-    if (dotClicked == true) {
-        return;
-    }
-    arrayOfNum.push(dot.textContent);
-    combinedNum = arrayOfNum.join('');
-    result.textContent = combinedNum;
-    dot.style.filter = 'brightness(70%)';
-    dotClicked = true;
-    return combinedNum;
-});
+dot.addEventListener('click', addDot);
 
-switchPlusMinus.addEventListener('click', () => {
-    if (switchClicked == true) {
-        return;
-    }
-    combinedNum = finalNum;
-    combinedNum *= -1;
-    result.textContent = combinedNum;
-    switchPlusMinus.style.filter = 'brightness(70%)';
-    switchClicked = true;
-    return combinedNum;
-});
+switchPlusMinus.addEventListener('click', plusMinus);
 
-equals.addEventListener('click', () => {
-    realNumbers[i] = combinedNum;
-    i++;
-    resetDot();
-    resetSwitch();
-    if (i > 1) {
-        doOperation(operation);
-    }
-});
+equals.addEventListener('click', whenEquals);
 
 reset.addEventListener('click', clear);
 
@@ -57,22 +29,73 @@ numberbtns.forEach(numbtn => {
 
 operators.forEach(operator => {
     operator.addEventListener('click', () => {
-        result.textContent = 0;
-        arrayOfNum = [];
-        realNumbers[i] = combinedNum;
-        operation = operator.textContent;
-        i++;
-        resetDot();
-        resetSwitch();
-        if (i > 1) {
-            doOperation(operation);
-        }
-        return operation;
+        whenOperator(operator);
     });
 });
 
-let finalNum = 0;
-let z = 0;
+function whenOperator(operator) {
+    operatorIcon = operator.textContent;
+    if (operatorIcon == '%') {
+        finalNum = result.textContent;
+        finalNum = parseFloat(finalNum) * 0.01;
+        finalNum = finalNum.toString();
+        result.textContent = finalNum;
+        realNumbers[realNumbers.length - 1] = finalNum;
+    } else {
+        result.textContent = '0';
+        realNumbers.length < 2 ? realNumbers.push(finalNum) : false;
+        finalNum = '';
+    }
+    resetDot();
+}
+
+function whenEquals() {
+    realNumbers.push(finalNum);
+    finalNum = '';
+    operation(operatorIcon, realNumbers[z - 1], realNumbers[z]);
+    resetDot();
+};
+
+function operation(operator, num1, num2) {
+    if (operator == '+') {
+        finalNum = parseFloat(num1) + parseFloat(num2);
+    }
+    else if (operator == '-') {
+        finalNum = parseFloat(num1) - parseFloat(num2);
+    }
+    else if (operator == 'x') {
+        finalNum = parseFloat(num1) * parseFloat(num2);
+    }
+    else if (operator == '/') {
+        finalNum = divide(num1, num2);
+    }
+    result.textContent = Math.round(finalNum*1000)/1000;
+    z += 2;
+    realNumbers.push(finalNum.toString());
+    finalNum = '';
+};
+
+function plusMinus() {
+    if (result.textContent == '0') {
+        finalNum += '-';
+        result.textContent = '-';
+    } else {
+        numberToSwitch = result.textContent;
+        numberToSwitch = parseFloat(numberToSwitch) * -1; 
+        result.textContent = numberToSwitch;
+        realNumbers[realNumbers.length - 1] = numberToSwitch.toString();
+    }
+};
+
+function addDot() {
+    if (dotClicked == true) {
+        return;
+    }
+    finalNum += dot.textContent;
+    result.textContent = finalNum;
+    dot.style.filter = 'brightness(70%)';
+    dotClicked = true;
+};
 
 function resetDot() {
     dot.style.filter = 'brightness(100%)';
@@ -84,73 +107,19 @@ function resetSwitch() {
     switchClicked = false;
 }
 
-function doOperation(operation) {
-    if (operation == '+') {
-        if (z < 1) {
-            finalNum = add(realNumbers[z], realNumbers[z+1]);
-        } else {
-            finalNum = add(finalNum, realNumbers[z+1]);
-        }
-    }
-    else if (operation == '-') {
-        if (z < 1) {
-            finalNum = subtract(realNumbers[z], realNumbers[z+1]);
-        } else {
-            finalNum = subtract(finalNum, realNumbers[z+1]);
-        }
-    }
-    else if (operation == 'x') {
-        if (z < 1) {
-            finalNum = multiply(realNumbers[z], realNumbers[z+1]);
-        } else {
-            finalNum = multiply(finalNum, realNumbers[z+1]);
-        }
-    }
-    else if (operation == '/') {
-        if (z < 1) {
-            finalNum = divide(realNumbers[z], realNumbers[z+1]);
-        } else {
-            finalNum = divide(finalNum, realNumbers[z+1]);
-        }
-    };
-    result.textContent = finalNum;
-    z++;
-    arrayOfNum = [];
-    return finalNum;
-};
-
-let combinedNum;
-
 function getNumber(numbtn) {
-    arrayOfNum.push(numbtn.textContent);
-    combinedNum = arrayOfNum.join('');
-    result.textContent = combinedNum;
-    return combinedNum;
+    finalNum += numbtn.textContent;
+    result.textContent = finalNum;
 };
 
 function clear() {
-    result.textContent = 0;
-    arrayOfNum = [];
+    result.textContent = '0';
+    finalNum = '';
     realNumbers = [];
-    i = 0;
-    z = 0;
-    finalNum = 0;
+    z = 1;
     resetDot();
-    resetSwitch();
-};
-
-function add(num1,num2) {
-    return parseFloat(num1) + parseFloat(num2);
-};
-
-function subtract(num1,num2) {
-    return parseFloat(num1) - parseFloat(num2);
-};
-
-function multiply(num1, num2) {
-    return parseFloat(num1) * parseFloat(num2);
 };
 
 function divide(num1,num2) {
-    return num2 != 0 ? parseFloat(num1) / parseFloat(num2) : "You can't divide by zero!";
+    return num2 != 0 ? parseFloat(num1) / parseFloat(num2) : "Error";
 };
