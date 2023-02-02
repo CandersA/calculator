@@ -1,6 +1,8 @@
 # calculator
 An average calculator (iPhone style)
 
+can be accessed here : https://candersa.github.io/calculator/
+
 Get first number when any of number buttons is pushed;
 If the operator button is pushed, get the second number;
 When the operator is pushed to the calculaton between the two numbers and return the result;
